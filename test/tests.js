@@ -27,6 +27,10 @@ describe("IndexedDBStore", function() {
 		return db.save(record)
 	}
 
+	function getRecord(record) {
+		return db.getByBlob(record)
+	}
+
 	it("should be available", function(){
 		db.should.not.be.undefined
 	})
@@ -59,14 +63,10 @@ describe("IndexedDBStore", function() {
 		})
 	})
 
-	describe("#get()", function() {
+	describe("#getByBlob()", function() {
 		it("should retrieve a given record", function() {
-			return addRecord("Test").then(function(record) {
+			return addRecord("Test").then(getRecord).then(function(record) {
 				record.should.equal("Test")
-
-				return db.get("Test").then(function(test) {
-					test.should.equal(record).and.equal("Test")
-				})
 			})
 		})
 	})
