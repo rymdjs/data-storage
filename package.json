@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "license": "MIT",
   "dependencies": {
-    "q": "1.0.x"
+    "q": "1.0.x",
+    "sha1": "1.1.x"
   },
   "scripts": {
     "test": "gulp test"
