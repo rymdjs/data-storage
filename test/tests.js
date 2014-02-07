@@ -31,6 +31,23 @@ describe("IndexedDBStore", function() {
 		return db.getByBlob(record)
 	}
 
+   function getBlobContents(blob) {
+      var defer = Q.defer();
+      var filereader = new FileReader();
+
+      filereader.onload = function(evt) {
+         defer.resolve(evt.target.result);
+      };
+
+      filereader.onerror = function(evt) {
+         defer.reject(evt.target.error);  
+      };
+      
+      filereader.readAsBinaryString(blob);
+
+      return defer.promise;
+   }
+
 	it("should be available", function(){
 		db.should.not.be.undefined
 	})
@@ -61,6 +78,16 @@ describe("IndexedDBStore", function() {
 				record.should.equal("Test")
 			})
 		})
+
+      it("should save a blob record", function() {
+         var blob = new Blob(["Test"]);
+
+         return addRecord(blob).then(function(record) {
+            return getBlobContents(record).then(function(contents) {
+               contents.should.equal("Test");
+            })
+         })
+      })
 	})
 
 	describe("#getByBlob()", function() {
@@ -69,6 +96,16 @@ describe("IndexedDBStore", function() {
 				record.should.equal("Test")
 			})
 		})
+
+      it("should retrieve a given blob record", function() {
+         var blob = new Blob(["Test"]);
+
+         return addRecord(blob).then(getRecord).then(function(record) {
+            return getBlobContents(record).then(function(contents) {
+               contents.should.equal("Test");
+            });
+         })
+      });
 	})
 
 	describe("#size()", function() {
